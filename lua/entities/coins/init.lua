@@ -25,11 +25,11 @@ ENT.Conditions = {
 }
 
 function ENT:Initialize()
-	self:PhysicsInit( SOLID_VPHYSICS )
+	self:PhysicsInit( SOLID_BBOX )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
-	self:SetSolid( SOLID_VPHYSICS )
+	self:SetSolid( SOLID_BBOX )
 	self:DrawShadow(true)
-	self:SetNoDraw(false)
+	
 	local phys = self:GetPhysicsObject()
 
 	if IsValid(phys) then
@@ -79,7 +79,7 @@ end
 
 hook.Add("PlayerDeath", "Condition::Frag", function(victim, _, attacker)
 	if attacker:GetMurderer() then
-		if !attacker.Condition["Frag"] then attacker.Condition["Frag"] = 1 else
+		if !attacker.Condition then attacker.Condition["Frag"] = 1 else
 			attacker.Condition["Frag"] = attacker.Condition + 1;
 		end
 	end

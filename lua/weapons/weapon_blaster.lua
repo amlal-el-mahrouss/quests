@@ -14,7 +14,7 @@ end
 
 SWEP.PrintName = "Blasteur"
 SWEP.Author = "ALTernative"
-SWEP.Purpose = "C'est un faux pistolet qui te permet de capturer des quêtes"
+SWEP.Purpose = "Un faux pistolet bien-sur!"
 
 SWEP.Slot = 5
 SWEP.SlotPos = 2
@@ -89,30 +89,13 @@ function SWEP:DealDamage()
 	local col = Color(255, 255, 255); 
     local part = EffectData();
 
-	if IsValid(tr.Entity) then
-		col = Color(223, 119, 50);
-		
-		part:SetOrigin( tr.Entity:GetPos() )
-		part:SetStart(Vector(col.r, col.g, col.b))
-		part:SetScale( 1 )
-		util.Effect("sweetspickup", part)
-
-		if SERVER && IsValid(tr.Entity) then
-			if tr.Entity:GetClass() == "quest" then
-				tr.Entity:Claim(self.Owner) -- this owner claims the quest
-				self.LockDelay = CurTime() + 5 
-			elseif tr.Entity:GetClass() == "cauldron" then
-				tr.Entity:DropCauldron(self.Owner)
-				self.LockDelay = CurTime() + 10
-			end
+	if SERVER && IsValid(tr.Entity) then
+		if tr.Entity:GetClass() == "quest" then
+			tr.Entity:Claim(self.Owner)
+		elseif tr.Entity:GetClass() == "cauldron" then
+			tr.Entity:DropCauldron(self.Owner)
 		end
-	else
-	    part:SetOrigin( tr.HitPos )
-		part:SetStart(Vector(col.r, col.g, col.b))
-		part:SetScale( 1 )
-		util.Effect( "sweetspickup", part)
 	end
-
 end
 
 function SWEP:OnDrop()
@@ -126,6 +109,5 @@ function SWEP:Deploy()
 
 	self.Weapon:SetNextPrimaryFire(CurTime() + vm:SequenceDuration() / 1 ) 
 
-	if SERVER && !istable(self.Owner.Claims) then self.Owner.Claims = {}; end
 	return true
 end
