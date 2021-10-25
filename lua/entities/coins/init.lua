@@ -5,24 +5,8 @@ include('shared.lua')
 
 local curtime;
 
-local function secTonMins(sec)
-	return sec * 60;
-end
-
-local function metersToKilometers(meter)
-	return meter * 1000;
-end
-
-local function hasMinPassed(min)
-	return (CurTime() - min) == curtime;
-end
 
 ENT.DeactivationDelay = CurTime();
-ENT.Conditions = {
-	["KM"] = metersToKilometers(100),
-	["MIN"] = secTonMins(120),
-	["Frag"] = 10
-}
 
 function ENT:Initialize()
 	self:PhysicsInit( SOLID_BBOX )
@@ -76,11 +60,3 @@ function ENT:ConditionAccomplished(target)
 
 	return false;
 end
-
-hook.Add("PlayerDeath", "Condition::Frag", function(victim, _, attacker)
-	if attacker:GetMurderer() then
-		if !attacker.Condition then attacker.Condition["Frag"] = 1 else
-			attacker.Condition["Frag"] = attacker.Condition + 1;
-		end
-	end
-end)
