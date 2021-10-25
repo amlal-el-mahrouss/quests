@@ -110,8 +110,6 @@ end
 -- Init/Think --
 
 function ENT:CustomInitialize()
-	if ClassicLib then ClassicLib.Announce({ "もう彼が来るだろう", "" }) end -- He's comming for us.. (en gros il viens pour t'arracher en 4)
-
 	self:snd("music/stingers/HL1_stinger_song28.mp3")
 	self:SetDefaultRelationship(D_HT, 1)
 	self.ShotOffHat = false
