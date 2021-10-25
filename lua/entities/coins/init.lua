@@ -1,4 +1,4 @@
-
+// Basic Coin with quests
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include('shared.lua')
@@ -19,9 +19,9 @@ end
 
 ENT.DeactivationDelay = CurTime();
 ENT.Conditions = {
-	metersToKilometers(100),
-	secTonMins(120),
-	10
+	["KM"] = metersToKilometers(100),
+	["MIN"] = secTonMins(120),
+	["Frag"] = 10
 }
 
 function ENT:Initialize()
@@ -60,14 +60,26 @@ end
 function ENT:Use(target)
 	if ( self:IsPlayerHolding() ) then return end
 	target:PickupObject( self );
+
+	target.Condition["MIN"] = CurTime() - curtime; 
+	self:ConditionAccomplished(target)
+	target.DeactivationDelay = CurTime() + 2;
 end
 
 function ENT:ConditionAccomplished(target)
 	if !target.Condition then return false end
 
-	for _, v in ipairs(self.Conditions) do
-		if target.Condition == v then return true end
+	for k, v in pairs(self.Conditions) do
+		if target.Condition[k] >= v then target.Condition[k] = false return true end
 	end
 
 	return false;
 end
+
+hook.Add("PlayerDeath", "Condition::Frag", function(victim, _, attacker)
+	if attacker:GetMurderer() then
+		if !attacker.Condition["Frag"] then attacker.Condition["Frag"] = 1 else
+			attacker.Condition["Frag"] = attacker.Condition + 1;
+		end
+	end
+end)
