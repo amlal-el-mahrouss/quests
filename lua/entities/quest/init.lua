@@ -45,7 +45,7 @@ function ENT:Initialize()
 		self:ResetSequence(self:LookupSequence("idle"));
 		self.UseableUntil = math.Round((#team.GetPlayers(2) / 2), 0);
 
-		if string.StartWith(util.DateStamp(), "2021-10-") then self:SetModel("models/halloween2015/pumbkin_n_f02.mdl") self:SetSkin(1) end
+		-- if string.StartWith(util.DateStamp(), "2021-10-") then self:SetModel("models/halloween2015/pumbkin_n_f02.mdl") self:SetSkin(1) end
 	end
 
 	curtime = CurTime();
@@ -65,11 +65,11 @@ function ENT:Claim(target)
 
 	LibC:Log("Useable until: ".. self.UseableUntil);
 	LibC:Log("User points: ".. target.Claims[self:GetName()]);
+	self:EmitSound("COIN.PICKUP");
+	
 end
 
 function ENT:Use(target)
 	if ( self:IsPlayerHolding() ) then return end
-
-	target:PickupObject( self )
-	self:EmitSound("COIN.PICKUP");
+	target:PickupObject( self );
 end
