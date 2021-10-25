@@ -38,8 +38,9 @@ function ENT:Initialize()
 		phys:Wake();
 
 		self.UseableUntil = math.Round((#team.GetPlayers(2) / 2), 0);
+		self.PickupSound = "COIN.PICKUP";
 
-		if string.StartWith(util.DateStamp(), "2021-10-") then self:SetModel("models/halloween2015/pumbkin_n_f02.mdl") self:SetSkin(2) end
+		if string.StartWith(util.DateStamp(), "2021-10-") then self.PickupSound = "COIN.PICKUP.HALLOWEEN" self:SetModel("models/halloween2015/pumbkin_n_f02.mdl") self:SetSkin(2) end
 	end
 
 	curtime = CurTime();
@@ -54,7 +55,7 @@ function ENT:Claim(target)
 	target.DeactivationDelay = CurTime() + 10;
 
 	self.UseableUntil = self.UseableUntil - 1;
-	self:EmitSound("COIN.PICKUP");
+	self:EmitSound(self.PickupSound);
 end
 
 function ENT:Use(target)

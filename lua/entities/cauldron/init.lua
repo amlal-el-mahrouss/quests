@@ -26,7 +26,7 @@ function ENT:DropCauldron(target)
 	for _, v in pairs(target.Claims) do
 		target:PS2_AddStandardPoints(
 			math.Round((#target.Claims / v), 0), 
-			"Argent.",
+			"Prime de quêtes.",
 			true
 		);
 
