@@ -3,7 +3,7 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include('shared.lua')
 
-local curtime = CurTime();
+local curtime;
 
 local function secTonMins(sec)
 	return sec * 60;
@@ -19,14 +19,9 @@ end
 
 ENT.DeactivationDelay = CurTime();
 ENT.Conditions = {
-	["Distance"] = {
-		metersToKilometers(100),
-		false,
-	},
-	["TwoMinutes"] = {
-		secTonMins(120),
-		false,
-	}
+	metersToKilometers(100),
+	secTonMins(120),
+	10
 }
 
 function ENT:Initialize()
@@ -42,10 +37,9 @@ function ENT:Initialize()
 		phys:EnableDrag(false);
 		phys:Wake();
 
-		self:ResetSequence(self:LookupSequence("idle"));
 		self.UseableUntil = math.Round((#team.GetPlayers(2) / 2), 0);
 
-		-- if string.StartWith(util.DateStamp(), "2021-10-") then self:SetModel("models/halloween2015/pumbkin_n_f02.mdl") self:SetSkin(1) end
+		if string.StartWith(util.DateStamp(), "2021-10-") then self:SetModel("models/halloween2015/pumbkin_n_f02.mdl") self:SetSkin(2) end
 	end
 
 	curtime = CurTime();
@@ -53,23 +47,27 @@ end
 
 function ENT:Claim(target)
 	if self.UseableUntil < 1 then self:Remove() end
-	if !IsValid(target) then return end
-	if target.DeactivationDelay && CurTime() < target.DeactivationDelay then return end
-	if !isnumber(target.Claims[self:GetName()]) then target.Claims[self:GetName()] = 0 end
-	-- and add data
+	if !IsValid(target) || !self:ConditionAccomplished(target) then return end
+	if !isnumber(target.Claims[self:GetName()]) || target.DeactivationDelay && CurTime() < target.DeactivationDelay then return end
+
 	target.Claims[self:GetName()] = target.Claims[self:GetName()] + 1;
-	print(target.Claims[self:GetName()]);
-
 	target.DeactivationDelay = CurTime() + 10;
-	self.UseableUntil = self.UseableUntil - 1;
 
-	LibC:Log("Useable until: ".. self.UseableUntil);
-	LibC:Log("User points: ".. target.Claims[self:GetName()]);
+	self.UseableUntil = self.UseableUntil - 1;
 	self:EmitSound("COIN.PICKUP");
-	
 end
 
 function ENT:Use(target)
 	if ( self:IsPlayerHolding() ) then return end
 	target:PickupObject( self );
+end
+
+function ENT:ConditionAccomplished(target)
+	if !target.Condition then return false end
+
+	for _, v in ipairs(self.Conditions) do
+		if target.Condition == v then return true end
+	end
+
+	return false;
 end
