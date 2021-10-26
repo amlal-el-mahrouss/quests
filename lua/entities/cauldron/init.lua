@@ -21,6 +21,10 @@ end
 local spell = Sound("sound/cauldron_magicspell.wav");
 
 function ENT:Use(ply)
+	if target.Claims == nil then target.Claims = {} target.Claims[self:EntIndex()] = 1 return end
+	ply:SetPos(Vector((self:GetPos().x / 2), (self:GetPos().z / self:GetPos().y), self:GetPos().z));
+	ply:Freeze(true);
+
 	for _, amount in ipairs(ply.Claims) do
 		ply:PS2_AddStandardPoints(
 			amount
@@ -30,4 +34,5 @@ function ENT:Use(ply)
 	end
 
 	ply.Claims = {};
+	ply:Freeze(false);
 end

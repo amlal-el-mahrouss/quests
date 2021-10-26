@@ -23,6 +23,8 @@ function ENT:Initialize()
 
 		self.UseableUntil = 10;
 		self.PickupSound = "COIN.PICKUP";
+		
+		self:ResetSequence(ACT_IDLE);
 	end
 end
 
