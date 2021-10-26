@@ -23,11 +23,11 @@ function ENT:Initialize()
 end
 
 function ENT:Use(ply)
-	ply:SetPos(Vector((self:GetPos().x / 2), (self:GetPos().z / self:GetPos().y), self:GetPos().z));
 	ply:Freeze(true);
-	ply:SetAngles(-self:GetForward())
+	ply:SetPos(Vector(self:GetPos().x, (self:GetPos().z / self:GetPos().y), self:GetPos().z));
+	ply:SetVelocity(Vector(0, (self:GetPos().y / self:GetPos().z) * 2, 0));
 
-	-- DO LOGIC
+	if ply:GetNWBool("CompletedQuest", false) then end
 
 	ply:Freeze(false);
 end
