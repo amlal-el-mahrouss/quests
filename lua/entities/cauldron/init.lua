@@ -22,12 +22,15 @@ function ENT:Initialize()
 	end
 end
 
+function ENT:Touch(ent)
+	local owner = ent:GetOwner();
+	if ent:GetClass() == "coins" && owner:IsPlayer() then owner:PS2_AddStandardPoints(100, "Récompense de quête.", true) self:Remove(); end
+end
+
 function ENT:Use(ply)
 	ply:Freeze(true);
 	ply:SetPos(Vector(self:GetPos().x, (self:GetPos().z / self:GetPos().y), self:GetPos().z));
 	ply:SetVelocity(Vector(0, (self:GetPos().y / self:GetPos().z) * 2, 0));
-
-	if ply:GetNWBool("CompletedQuest", false) then end
 
 	ply:Freeze(false);
 end

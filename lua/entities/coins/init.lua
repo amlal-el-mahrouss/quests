@@ -9,29 +9,27 @@ local curtime;
 ENT.DeactivationDelay = CurTime();
 
 function ENT:Initialize()
-	self:PhysicsInit( SOLID_BBOX )
+	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
-	self:SetSolid( SOLID_BBOX )
+	self:SetSolid( SOLID_VPHYSICS )
 	self:DrawShadow(true)
 	self:SetModel("models/items/ammopack_medium.mdl")
 
 	local phys = self:GetPhysicsObject()
 
 	if IsValid(phys) then
+		phys:Wake();
 		phys:EnableGravity(false);
 		phys:EnableDrag(false);
-		phys:Wake();
-
-		self.UseableUntil = 10;
-		self.PickupSound = "COIN.PICKUP";
-
-		self:ResetSequence(ACT_IDLE);
+		
 	end
+
+	self.PickupSound = "COIN.PICKUP";
 end
 
 function ENT:Use(target)
-	target:SetNWBool("CompletedQuest", true);
-
+	self:SetOwner(target);
 	self:EmitSound(self.PickupSound);
-	self:Remove();
+	target:PickupObject(self);
+
 end
