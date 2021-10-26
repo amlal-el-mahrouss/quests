@@ -3,6 +3,9 @@ AddCSLuaFile( "shared.lua" )
 include('shared.lua')
 
 function ENT:Initialize()
+	self:SetModel("models/zerochain/props_halloween/witchcauldron.mdl")
+    self:SetPos(Vector(190.129089, -342.967682, 64.031250)) 
+    self:SetAngles(Angle(-0.980034, 89.959778, 0.000000))
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_FLYGRAVITY )
 	self:SetSolid( SOLID_VPHYSICS )
@@ -12,27 +15,19 @@ function ENT:Initialize()
 	if IsValid(phys) then
 		phys:Wake()
 
-		ParticleEffectAttach("soup_bubbles01", PATTACH_POINT_FOLLOW, self.Entity, 1)
-		self.Sound = CreateSound( self, "cauldron_bubbling_loop.wav" )
-		self.Sound:PlayEx( 0.5, 100 )
+		ParticleEffectAttach("soup_bubbles01", PATTACH_POINT_FOLLOW, self, 1);
+		self.Sound = CreateSound( self, "cauldron_bubbling_loop.wav" );
+		self.Sound:PlayEx( 0.5, 100 );
+		self.Spell = Sound("sound/cauldron_magicspell.wav");
 	end
 end
 
-local spell = Sound("sound/cauldron_magicspell.wav");
-
 function ENT:Use(ply)
-	if target.Claims == nil then target.Claims = {} target.Claims[self:EntIndex()] = 1 return end
 	ply:SetPos(Vector((self:GetPos().x / 2), (self:GetPos().z / self:GetPos().y), self:GetPos().z));
 	ply:Freeze(true);
+	ply:SetAngles(-self:GetForward())
 
-	for _, amount in ipairs(ply.Claims) do
-		ply:PS2_AddStandardPoints(
-			amount
-			"Prime de quêtes.",
-			true
-		);
-	end
+	-- DO LOGIC
 
-	ply.Claims = {};
 	ply:Freeze(false);
 end

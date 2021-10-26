@@ -1,3 +1,6 @@
+-- Un Easter Egg
+-- Apparait 5 rounds sur 20 avec un taux de chance de 20%
+
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include('shared.lua')
