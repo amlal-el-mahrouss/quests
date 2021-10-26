@@ -20,19 +20,17 @@ end
 
 local spell = Sound("sound/cauldron_magicspell.wav");
 
-function ENT:DropCauldron(target)
+function ENT:DropCauldron(ply)
 	local start = false;
 
-	for _, v in pairs(target.Claims) do
+	for _, v in pairs(ply.Claims) do
 		start = true;
-		target:PS2_AddStandardPoints(
-			math.Round((#target.Claims / v), 0), 
+		ply:PS2_AddStandardPoints(
+			math.Round((#ply.Claims / v), 0), 
 			"Prime de quêtes.",
 			true
 		);
-
-		LibC:Log(target:SteamID() .. " Got: " .. tostring(points));
 	end
 
-	if start then target.Claims[v:GetName()] = 0; end
+	if start then ply.Claims[v:GetName()] = 0; end
 end
