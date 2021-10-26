@@ -21,19 +21,19 @@ function ENT:Initialize()
 		phys:EnableDrag(false);
 		phys:Wake();
 
-		self.UseableUntil = math.Round((#team.GetPlayers(2) / 2), 0);
+		self.UseableUntil = 10;
 		self.PickupSound = "COIN.PICKUP";
 	end
 end
 
 function ENT:Use(target)
+	self.DeactivationDelay = CurTime() + 10;
+	self:EmitSound(self.PickupSound);
+
 	if self.UseableUntil < 1 then self:Remove() end
 	if CurTime() < self.DeactivationDelay then return end
 
-	if !target.Claims then target.Claims[self:GetName()] = 1 end
-	target.Claims[self:GetName()] = target.Claims[self:GetName()] + 1;
-	self.DeactivationDelay = CurTime() + 10;
-
+	if target.Claims == nil then target.Claims = {} target.Claims[self:EntIndex()] = 1 return end
+	target.Claims[self:EntIndex()] = target.Claims[self:EntIndex()] + 1;
 	self.UseableUntil = self.UseableUntil - 1;
-	self:EmitSound(self.PickupSound);
 end
