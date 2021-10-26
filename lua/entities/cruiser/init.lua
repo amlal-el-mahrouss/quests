@@ -6,33 +6,14 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_FLYGRAVITY )
 	self:SetSolid( SOLID_VPHYSICS )
+	self:SetModel("models/props/re3_remake_patrol_car.mdl")
+	self:SetPos(Vector(1466.309692, -138.753723, 94.031250))
+	self:SetAngles(Angle(0.967987, 92.400124, 0.000000))
 
 	local phys = self:GetPhysicsObject()
 
 	if IsValid(phys) then
 		phys:Wake()
-
-		ParticleEffectAttach("soup_bubbles01", PATTACH_POINT_FOLLOW, self.Entity, 1)
-		self.Sound = CreateSound( self, "cauldron_bubbling_loop.wav" )
-		self.Sound:PlayEx( 0.5, 100 )
 	end
 end
 
-local spell = Sound("sound/cauldron_magicspell.wav");
-
-function ENT:DropCauldron(target)
-	local start = false;
-
-	for _, v in pairs(target.Claims) do
-		start = true;
-		target:PS2_AddStandardPoints(
-			math.Round((#target.Claims / v), 0), 
-			"Prime de quêtes.",
-			true
-		);
-
-		LibC:Log(target:SteamID() .. " Got: " .. tostring(points));
-	end
-
-	if start then target.Claims[v:GetName()] = 0; end
-end
