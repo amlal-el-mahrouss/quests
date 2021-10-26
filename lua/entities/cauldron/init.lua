@@ -32,5 +32,7 @@ function ENT:Use(ply)
 	ply:SetPos(Vector(self:GetPos().x, (self:GetPos().z / self:GetPos().y), self:GetPos().z));
 	ply:SetVelocity(Vector(0, (self:GetPos().y / self:GetPos().z) * 2, 0));
 
+
+	
 	ply:Freeze(false);
 end
