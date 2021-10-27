@@ -30,7 +30,9 @@ function ENT:Initialize()
 end
 
 function ENT:Use(ply)
-	local owner = self:GetOwner();
+	if self:IsPlayerHolding() then return end
+	if !IsValid(self:GetOwner()) then ply:PickupObject(self) end
+
 	if not IsValid(owner) || not owner:IsPlayer() then return end
 	owner:SetNWBool("QuestCompleted", true);
 
