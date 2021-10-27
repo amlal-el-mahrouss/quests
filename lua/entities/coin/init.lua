@@ -29,11 +29,11 @@ function ENT:Initialize()
 	self:ResetSequence("idle");
 end
 
-function ENT:Use(ply, caller, use, value)
+function ENT:Use(ply)
 	local owner = self:GetOwner();
 	if not IsValid(owner) || not owner:IsPlayer() then return end
 	owner:SetNWBool("QuestCompleted", true);
-	
+
 	self:SetModelScale(0, 0.15);
 	timer.Simple(0.15, function()
 		if IsValid(self) then self:EmitSound("COIN.DEPOSIT"); self:Remove() end

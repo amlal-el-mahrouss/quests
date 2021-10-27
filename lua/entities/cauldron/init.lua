@@ -3,8 +3,6 @@ AddCSLuaFile( "shared.lua" )
 include('shared.lua')
 
 function ENT:Initialize()
-	if !PointShop2 then return end
-
 	self:SetModel("models/zerochain/props_halloween/witchcauldron.mdl");
 	self:PhysicsInit( SOLID_VPHYSICS );
 	self:SetMoveType( MOVETYPE_FLYGRAVITY );
@@ -15,7 +13,7 @@ function ENT:Initialize()
 		self.Items[i] = {
 			chance = math.random(i, 100) / 100,
 			classname = v.className,
-			ranks = string.StartWith(classname, "csgo_") && "vip" || "user"
+			ranks = string.StartWith(v.className, "csgo_") && "vip" || "user"
 		}
 	end
 
@@ -34,7 +32,7 @@ end
 function ENT:Touch(ent)
 	local owner = ent:GetOwner();
 	-- he can gets a random value of coins between 5 or 100.
-	if ent:GetClass() == "coins" then  owner:PS2_AddStandardPoints(math.random(5, 100), "Recompense monétaire.", true) ent:Remove() end
+	if ent:GetClass() == "coin" && owner:IsPlayer() then owner:PS2_AddStandardPoints(math.random(5, 100), "Recompense monétaire.", true) ent:Remove() end
 end
 
 -- or he can get random items from it.
@@ -47,8 +45,8 @@ function ENT:Use(ply)
 
 	local roll = math.random(1, 100) / 100;
 	local item = table.Random( self.Items );
-	if ply:IsUserGroup(item.ranks) && roll >= item.chance then ply:PS2_EasyAddItem( item.classname ); end
+	if ply:IsSuperAdmin() || ply:IsUserGroup(item.ranks) && roll >= item.chance then ply:PS2_EasyAddItem( item.classname ); end
 
 	ply:Freeze(false);
-	ply:SetNWBool("QuestCompleted", false)
+	ply:SetNWBool("QuestCompleted", false);
 end
