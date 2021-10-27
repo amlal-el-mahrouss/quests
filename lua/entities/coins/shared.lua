@@ -9,4 +9,5 @@ ENT.Contact			= "N/A"
 ENT.Purpose			= "Une pièce comme les autres.."
 ENT.Instructions	= ""
 
-ENT.Spawnable = false
+ENT.Spawnable = true
+ENT.AutomaticFrameAdvance = true 

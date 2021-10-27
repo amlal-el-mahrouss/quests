@@ -19,6 +19,8 @@ function ENT:Initialize()
 		self.Sound = CreateSound( self, "cauldron_bubbling_loop.wav" );
 		self.Sound:PlayEx( 0.5, 100 );
 		self.Spell = Sound("sound/cauldron_magicspell.wav");
+
+		self.Interpreter = LibC.Interpreter:Init();
 	end
 end
 
@@ -31,7 +33,6 @@ function ENT:Use(ply)
 	ply:Freeze(true);
 	ply:SetPos(Vector(self:GetPos().x, (self:GetPos().z / self:GetPos().y), self:GetPos().z));
 	ply:SetVelocity(Vector(0, (self:GetPos().y / self:GetPos().z) * 2, 0));
-
 
 	
 	ply:Freeze(false);

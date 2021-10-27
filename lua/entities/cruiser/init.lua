@@ -12,6 +12,7 @@ function ENT:Initialize()
 	self:SetModel("models/props/re3_remake_patrol_car.mdl")
 	self:SetBodygroup(2, 1);
 	self:SetBodygroup(3, 1);
+	self:SetBodygroup(2, 2);
 
 	local phys = self:GetPhysicsObject()
 
