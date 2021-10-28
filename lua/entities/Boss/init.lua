@@ -3,10 +3,12 @@ AddCSLuaFile( "shared.lua" )
 include('shared.lua')
 
 function ENT:Initialize()
-	self:SetModel("models/zerochain/props_halloween/witchcauldron.mdl");
 	self:PhysicsInit( SOLID_VPHYSICS );
 	self:SetMoveType( MOVETYPE_FLYGRAVITY );
 	self:SetSolid( SOLID_VPHYSICS );
+
+	self:SetModel("models/characters/badasses/gordon_tie.mdl")
+
 	self.Items = {}
 
 	for i, v in pairs( Pointshop2.GetRegisteredItems() ) do
@@ -20,12 +22,9 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 
 	if IsValid(phys) then
-		phys:Wake()
-
-		ParticleEffectAttach("soup_bubbles01", PATTACH_POINT_FOLLOW, self, 1);
-		self.Sound = CreateSound( self, "cauldron_bubbling_loop.wav" );
-		self.Sound:PlayEx( 0.5, 100 );
-		self.Spell = Sound("sound/cauldron_magicspell.wav");
+		phys:Wake();
+		self:ResetSequence("lean_left");
+		self:AddLayeredSequence(self:LookupSequence("lean_left_to_idle"), 1);
 	end
 end
 
@@ -39,14 +38,16 @@ end
 function ENT:Use(ply)
 	if !ply:IsPlayer() || !ply:GetNWBool("QuestCompleted", false) then return end
 
-	ply:Freeze(true);
-	ply:SetPos(Vector(self:GetPos().x, (self:GetPos().z / self:GetPos().y), self:GetPos().z));
-	ply:SetVelocity(Vector(0, (self:GetPos().y / self:GetPos().z) * 1.5, 0));
+	self:GetLayerSequence(1);
 
 	local roll = math.random(1, 100) / 100;
 	local item = table.Random( self.Items );
 	if ply:IsSuperAdmin() || ply:IsUserGroup(item.ranks) && roll >= item.chance then ply:PS2_EasyAddItem( item.classname ); end
-
-	ply:Freeze(false);
 	ply:SetNWBool("QuestCompleted", false);
+end
+
+function ENT:Think()
+
+	self:NextThink( CurTime() )
+	return true
 end

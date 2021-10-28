@@ -9,7 +9,7 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:SetModel("models/items/ammopack_medium.mdl")
+	self:SetModel("models/jessev92/payday2/item_bag_loot_jb.mdl")
 	self:SetBodygroup(2, 1);
 	self:SetBodygroup(3, 1);
 	self:SetBodygroup(2, 2);
@@ -25,14 +25,11 @@ function ENT:Initialize()
 		phys:EnableDrag(true);
 		phys:EnableGravity(true);
 	end
-
-	self:ResetSequence("idle");
 end
 
-function ENT:Use(ply)
-	if self:IsPlayerHolding() then return end
-	if !IsValid(self:GetOwner()) then ply:PickupObject(self) end
-
+function ENT:Use()
+	local owner = self:GetOwner();
+	
 	if not IsValid(owner) || not owner:IsPlayer() then return end
 	owner:SetNWBool("QuestCompleted", true);
 
@@ -40,10 +37,4 @@ function ENT:Use(ply)
 	timer.Simple(0.15, function()
 		if IsValid(self) then self:EmitSound("COIN.DEPOSIT"); self:Remove() end
 	end)
-end
-
-function ENT:Think()
-
-	self:NextThink( CurTime() )
-	return true
 end
